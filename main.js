@@ -3,16 +3,26 @@
 const $ = document.querySelector.bind(document);
 const $$ = document.querySelectorAll.bind(document);
 
-const app = $('#root');
+const app = $('#app');
 
 const heading = document.createElement('h1');
 const input = document.createElement('input');
 const submitButton = document.createElement('button');
 const result = document.createElement('p');
+const wrapper = document.createElement('div')
 
 heading.innerText = 'Máy tính tuổi thông minh';
+heading.classList.add('heading')
+
 submitButton.innerText = 'Submit';
+submitButton.classList.add('submitBtn');
+
 input.placeholder = 'Nhập tuổi của bạn...';
+input.classList.add('input');
+
+result.classList.add('result');
+
+wrapper.classList.add('wrapper')
 
 const VALID = 'VALID';
 const MISSING = 'MISSING';
@@ -31,13 +41,14 @@ let value = (function (element) {
 })(input);
 
 const checkIsNumber = (value) => {
-    const temp = value;
-    const valueParse = parseInt(value);
+    if (!isNaN(value)) {
+        value = +value
+    }
 
     return {
-        isANumber: temp == valueParse ? true : false,
-        isValidNumber: valueParse >= 0 ? true : false,
-        valueParse
+        isANumber: !isNaN(value),
+        isValidNumber: value >= 0 ? true : false,
+        value
     };
 };
 const validate = (value) => {
@@ -56,28 +67,23 @@ const validate = (value) => {
     return { isValid, ...status }
 };
 
-const outputs = (value) => ([
-    [[], [], [], [], []],
-    [],
-    []
-])
-
 const handleOutput = (value) => {
     const receive = validate(value);
+    value = receive.value
     let output = '';
 
     switch (receive.isValid) {
         case VALID:
-            if (receive.valueParse < 10) {
+            if (value < 10) {
                 output += `Mới ${value} tuổi à, trả điện thoại cho bố mẹ đi nhóc!`;
             }
-            else if (receive.valueParse < 50) {
+            else if (value < 50) {
                 output += `Bạn đã ${value} tuổi rồi!`;
             }
-            else if (receive.valueParse < 70) {
+            else if (value < 70) {
                 output += `Con chào Bác, Bác đã ${value} tuổi!`;
             }
-            else if (receive.valueParse <= 120) {
+            else if (value <= 120) {
                 output += `Con chào Cụ 🙏, Cụ đã ${value} tuổi!`;
             }
             else {
@@ -97,20 +103,20 @@ const handleOutput = (value) => {
     return output;
 };
 
-const handleSubmit = (element) => {
+const handleSubmit = (parent, element) => {
     return () => {
         element.innerText = handleOutput(value.value);
-        app.appendChild(element);
+        parent.appendChild(element);
         value.value = '';
         input.focus();
     };
 };
 
 const handleKeySubmit = (element) => {
-    return (e) => e.keyCode === 13 ? handleSubmit(element)() : null;
+    return (e) => e.keyCode === 13 ? handleSubmit(app, element)() : null;
 };
 
-submitButton.onclick = handleSubmit(result);
+submitButton.onclick = handleSubmit(app, result);
 document.onkeydown = handleKeySubmit(result);
 
 const handleResultClassName = (value, element) => {
@@ -136,11 +142,10 @@ const handleResultClassName = (value, element) => {
 
 input.oninput = (e) => {
     value.value = e.target.value.trim();
-    handleResultClassName(value.value, result)
+    handleResultClassName(value.value, input)
 };
 
-
-
 app.appendChild(heading);
-app.appendChild(input);
-app.appendChild(submitButton);
+wrapper.appendChild(input);
+wrapper.appendChild(submitButton);
+app.appendChild(wrapper)
