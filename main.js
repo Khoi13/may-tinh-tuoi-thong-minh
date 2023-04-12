@@ -41,7 +41,7 @@ let value = (function (element) {
 })(input);
 
 const checkIsNumber = (value) => {
-    if (!isNaN(value)) {
+    if (!isNaN(value) && value !== '') {
         value = +value
     }
 
