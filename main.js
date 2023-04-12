@@ -46,7 +46,7 @@ const checkIsNumber = (value) => {
     }
 
     return {
-        isANumber: !isNaN(value),
+        isANumber: !isNaN(value) && value !== '',
         isValidNumber: value >= 0 ? true : false,
         value
     };
