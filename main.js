@@ -57,7 +57,7 @@ const validate = (value) => {
 
     if (status.isANumber && status.isValidNumber) {
         isValid += VALID;
-    } else if (value == '') {
+    } else if (value === '') {
         isValid += MISSING;
     }
     else {
@@ -93,10 +93,10 @@ const handleOutput = (value) => {
     value = receive.value
     let output = '';
 
+    handleResultClassName(value, result)
+
     switch (receive.isValid) {
         case VALID:
-            handleResultClassName(value, result)
-
             if (value < 10) {
                 output += `Mới ${value} tuổi à, trả điện thoại cho bố mẹ đi nhóc!`;
             }
@@ -114,11 +114,9 @@ const handleOutput = (value) => {
             };
             break;
         case MISSING:
-            handleResultClassName(value, result)
             output += 'Đã nhập gì đâu mà tính';
             break;
         case INVALID:
-            handleResultClassName(value, result)
             output += `${value}???, đây là tuổi à`;
             break;
         default:
@@ -129,11 +127,13 @@ const handleOutput = (value) => {
 };
 
 const handleSubmit = (parent, element) => {
+    handleResultClassName(value.value, input)
     return () => {
         element.innerText = handleOutput(value.value);
         parent.appendChild(element);
         value.value = '';
         input.focus();
+
     };
 };
 
