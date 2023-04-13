@@ -67,6 +67,27 @@ const validate = (value) => {
     return { isValid, ...status }
 };
 
+const handleResultClassName = (value, element) => {
+    const { isValid } = validate(value)
+    switch (isValid) {
+        case VALID:
+            element.classList.remove('invalid', 'missing');
+            element.classList.add('valid');
+            break;
+        case MISSING:
+            element.classList.remove('valid', 'invalid');
+            element.classList.add('missing');
+            break;
+        case INVALID:
+            element.classList.remove('valid', 'missing');
+            element.classList.add('invalid');
+            break;
+        default:
+            throw new Error('lỗi')
+    }
+
+};
+
 const handleOutput = (value) => {
     const receive = validate(value);
     value = receive.value
@@ -74,6 +95,8 @@ const handleOutput = (value) => {
 
     switch (receive.isValid) {
         case VALID:
+            handleResultClassName(value, result)
+
             if (value < 10) {
                 output += `Mới ${value} tuổi à, trả điện thoại cho bố mẹ đi nhóc!`;
             }
@@ -91,9 +114,11 @@ const handleOutput = (value) => {
             };
             break;
         case MISSING:
+            handleResultClassName(value, result)
             output += 'Đã nhập gì đâu mà tính';
             break;
         case INVALID:
+            handleResultClassName(value, result)
             output += `${value}???, đây là tuổi à`;
             break;
         default:
@@ -118,27 +143,6 @@ const handleKeySubmit = (element) => {
 
 submitButton.onclick = handleSubmit(app, result);
 document.onkeydown = handleKeySubmit(result);
-
-const handleResultClassName = (value, element) => {
-    const { isValid } = validate(value)
-    switch (isValid) {
-        case VALID:
-            element.classList.remove('invalid', 'missing');
-            element.classList.add('valid');
-            break;
-        case MISSING:
-            element.classList.remove('valid', 'invalid');
-            element.classList.add('missing');
-            break;
-        case INVALID:
-            element.classList.remove('valid', 'missing');
-            element.classList.add('invalid');
-            break;
-        default:
-            throw new Error('lỗi')
-    }
-
-};
 
 input.oninput = (e) => {
     value.value = e.target.value.trim();
