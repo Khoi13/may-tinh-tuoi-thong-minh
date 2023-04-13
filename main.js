@@ -127,8 +127,8 @@ const handleOutput = (value) => {
 };
 
 const handleSubmit = (parent, element) => {
-    handleResultClassName(value.value, input)
     return () => {
+        handleResultClassName(value.value, input)
         element.innerText = handleOutput(value.value);
         parent.appendChild(element);
         value.value = '';
